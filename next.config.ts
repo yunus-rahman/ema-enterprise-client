@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  reactStrictMode: true,
+  rewrites() {
+    return [
+      { source: '/favicon.ico', destination: '/path/to/some/other/file' },
+    ];
+  },
 };
 
 export default nextConfig;
