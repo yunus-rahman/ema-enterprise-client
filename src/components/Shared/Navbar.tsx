@@ -6,7 +6,23 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-
+import Image from "next/image"
+import logo from "../../../public/logo.png"
+// NavItems
+const NavItems = [
+    {
+        title: 'Home',
+        path: '/',
+    },
+    {
+        title: 'Our Products',
+        path: '/our-products',
+    },
+    {
+        title: 'Contact',
+        path: '/contact',
+    },
+]
 export default function Component() {
     return (
         <header className="flex h-20 w-full justify-between items-center px-4 md:px-6 border-b-2 shadow-lg">
@@ -19,7 +35,8 @@ export default function Component() {
                 </SheetTrigger>
                 <SheetContent side="left">
                     <Link href="#" className="mr-6 hidden lg:flex" prefetch={false}>
-                        <MountainIcon className="h-6 w-6" />
+                        {/* <MountainIcon className="h-6 w-6" /> */}
+                        <Image src={logo} alt='logo' height={50} width={50} />
                         <span className="sr-only">Acme Inc</span>
                     </Link>
                     <div className="grid gap-2 py-6">
@@ -39,41 +56,24 @@ export default function Component() {
                 </SheetContent>
             </Sheet>
             {/* For lg device */}
-            <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
-                <MountainIcon className="h-6 w-6" />
+            <Link href="/" className="mr-6 hidden lg:flex items-center gap-2" prefetch={false}>
+                <Image src={logo} alt='logo' height={50} width={50} className="rounded-full" />
                 <span className="sr-only">Acme Inc</span>
-                <h2>Ema-Enterprise</h2>
+                <h2 className="text-lg font-semibold">Ema-Enterprise</h2>
             </Link>
 
-            <nav className="hidden lg:flex justify-center gap-6">
-                <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                    prefetch={false}
-                >
-                    Home
-                </Link>
-                <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                    prefetch={false}
-                >
-                    About
-                </Link>
-                <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                    prefetch={false}
-                >
-                    Services
-                </Link>
-                <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                    prefetch={false}
-                >
-                    Contact
-                </Link>
+            <nav className="hidden lg:flex justify-start gap-6">
+
+                {
+                    NavItems.map(item => <Link
+                        key={item.path}
+                        href={item.path}
+                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+                        prefetch={false}
+                    >
+                        {item.title}
+                    </Link>)
+                }
             </nav>
             <nav >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -108,21 +108,3 @@ function MenuIcon(props) {
 }
 
 
-function MountainIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-        </svg>
-    )
-}

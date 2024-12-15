@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Shared/Navbar";
 import Footer from "@/components/Shared/Footer";
-import Head from "next/head";
+import Head from 'next/head';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,15 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <title>Ema </title>
-        <link rel="icon" type="image/png" href="./favicon.ico" />
+        <title>My Website Title</title>
+        <meta name="title" content="Ema-Enterprise" />
+        <meta name="description" content="My Next.js website description" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
 
         <Navbar />
-        <div className="min-h-screen">
+        <div className="min-h-screen mt-10">
           {children}
         </div>
         <Footer />
