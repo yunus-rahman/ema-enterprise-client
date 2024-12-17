@@ -1,3 +1,4 @@
+'use client'
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/lJwnQlHSEBA
@@ -8,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import logo from "../../../public/logo.png"
+import { useContext } from "react"
+import { AuthContext } from "@/provider/AuthProvider"
 // NavItems
 const NavItems = [
     {
@@ -24,6 +27,8 @@ const NavItems = [
     },
 ]
 export default function Component() {
+    const { user } = useContext(AuthContext)
+    console.log(user)
     return (
         <header className="flex h-20 w-full justify-between items-center px-4 md:px-6 border-b-2 shadow-lg bg-background text-[#DDB184]">
             <Sheet>
@@ -76,11 +81,15 @@ export default function Component() {
                 }
             </nav>
             <nav >
-                <Link href='/login'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10 cursor-pointer">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-                </Link>
+                {
+                    user?.email ? < Image
+                    className="rounded-full border border-primary"
+                    src={user?.photoURL} height={50} width={50} alt='' /> : <Link href='/login'>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10 cursor-pointer">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </Link>
+                }
 
             </nav>
 

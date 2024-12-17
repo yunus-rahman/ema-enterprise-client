@@ -2,14 +2,19 @@
 import { useContext } from "react";
 import { Button } from "../ui/button";
 import { AuthContext } from "@/provider/AuthProvider";
+import { useRouter } from "next/navigation";
 
 
 const SocialLogin = () => {
+    const router = useRouter();
     const { googleLogin } = useContext(AuthContext)
     const handleGoogleLogin = () => {
         googleLogin()
             .then(result => {
-                console.log(result, 'rs from login')
+                if (result.result) {
+                    alert('login')
+                    router.push('/')
+                }
             })
     }
     return (

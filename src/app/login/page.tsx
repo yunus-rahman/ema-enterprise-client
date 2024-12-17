@@ -14,13 +14,7 @@ const Login = () => {
                 <div className=" text-center">
                     <h2 className="font-bold text-2xl">Login</h2>
                 </div>
-                {/* Form */}
-                <form className="p-5">
-                    <Input type="tel" placeholder="phone number" />
-                    <div className="mt-5">
-                        <Button variant='default' className="w-full">Login</Button>
-                    </div>
-                </form>
+
                 <hr className="font-bold m-3 mx-5" />
                 {/* social Login */}
                 <SocialLogin />

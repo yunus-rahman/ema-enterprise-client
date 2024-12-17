@@ -4,6 +4,8 @@ import auth from "@/firebase/firebase.config";
 import {
     GoogleAuthProvider,
     onAuthStateChanged,
+    RecaptchaVerifier,
+    signInWithPhoneNumber,
     signInWithPopup,
     User,
 } from "firebase/auth";
@@ -34,9 +36,10 @@ type PropsType = {
 const AuthProvider = ({ children }: PropsType) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
     // Google provider
     const googleProvider = new GoogleAuthProvider();
+    // Phone number login
+    const appVerifier = window.recaptchaVerifier;
 
     // Google login
     const googleLogin = () => {
@@ -51,6 +54,41 @@ const AuthProvider = ({ children }: PropsType) => {
                 setLoading(false);
                 throw error;
             });
+    };
+
+
+    const phoneLogin = (phoneNumber: string) => {
+        setLoading(true);
+
+        return new Promise((resolve, reject) => {
+            // Initialize reCAPTCHA
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                    size: "invisible",
+                    callback: () => {
+                        console.log("reCAPTCHA verified.");
+                    },
+                    "expired-callback": () => {
+                        console.warn("reCAPTCHA expired.");
+                    },
+                });
+            }
+
+            const appVerifier = window.recaptchaVerifier;
+
+            // Sign in with phone number
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    console.log("OTP Sent!", confirmationResult);
+                    window.confirmationResult = confirmationResult; // Store to verify later
+                    resolve(confirmationResult);
+                })
+                .catch((error) => {
+                    console.error("Phone authentication error:", error);
+                    reject(error);
+                })
+                .finally(() => setLoading(false));
+        });
     };
 
     // Handle user state
@@ -71,6 +109,7 @@ const AuthProvider = ({ children }: PropsType) => {
         loading,
         setLoading,
         googleLogin,
+        phoneLogin
     };
 
     return (
