@@ -3,13 +3,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCAkIV3aiUk_mJ_0TWeJl8ZzHmIqGN6tGM",
-    authDomain: "ema-enterprise-kus.firebaseapp.com",
-    projectId: "ema-enterprise-kus",
-    storageBucket: "ema-enterprise-kus.firebasestorage.app",
-    messagingSenderId: "42340845391",
-    appId: "1:42340845391:web:0a374b77407dccf47ea73a",
-    measurementId: "G-GPWGXSS4BG"
+    apiKey: process.env.NEXT_PUBLIC_apiKey,
+    authDomain: process.env.NEXT_PUBLIC_authDomain,
+    projectId: process.env.NEXT_PUBLIC_projectId,
+    storageBucket: process.env.NEXT_PUBLIC_storageBucket,
+    messagingSenderId: process.env.NEXT_PUBLIC_messagingSenderId,
+    appId: process.env.NEXT_PUBLIC_appId,
+    measurementId: process.env.NEXT_PUBLIC_measurementId,
 };
 
 // Initialize Firebase

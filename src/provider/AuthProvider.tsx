@@ -4,9 +4,8 @@ import auth from "@/firebase/firebase.config";
 import {
     GoogleAuthProvider,
     onAuthStateChanged,
-    RecaptchaVerifier,
-    signInWithPhoneNumber,
     signInWithPopup,
+    signOut,
     User,
 } from "firebase/auth";
 
@@ -15,16 +14,16 @@ type AuthInfoType = {
     user: User | null; // Firebase User object or null
     loading: boolean;
     setLoading: (loading: boolean) => void;
-    googleLogin: () => Promise<any>; // Sign-in function returns a Promise
+    // googleLogin: () => Promise<any>; // Sign-in function returns a Promise
 };
 
 // Initial value for the context
-const initialAuthInfo: AuthInfoType = {
-    user: null,
-    loading: false,
-    setLoading: () => { },
-    googleLogin: async () => { },
-};
+// const initialAuthInfo: AuthInfoType = {
+//     user: null,
+//     loading: false,
+//     setLoading: () => { },
+//     googleLogin: async () => { },
+// };
 
 // Create context with the proper type
 export const AuthContext = createContext<AuthInfoType>(null);
@@ -38,8 +37,8 @@ const AuthProvider = ({ children }: PropsType) => {
     const [loading, setLoading] = useState<boolean>(false);
     // Google provider
     const googleProvider = new GoogleAuthProvider();
-    // Phone number login
-    const appVerifier = window.recaptchaVerifier;
+
+
 
     // Google login
     const googleLogin = () => {
@@ -57,39 +56,9 @@ const AuthProvider = ({ children }: PropsType) => {
     };
 
 
-    const phoneLogin = (phoneNumber: string) => {
-        setLoading(true);
-
-        return new Promise((resolve, reject) => {
-            // Initialize reCAPTCHA
-            if (!window.recaptchaVerifier) {
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-                    size: "invisible",
-                    callback: () => {
-                        console.log("reCAPTCHA verified.");
-                    },
-                    "expired-callback": () => {
-                        console.warn("reCAPTCHA expired.");
-                    },
-                });
-            }
-
-            const appVerifier = window.recaptchaVerifier;
-
-            // Sign in with phone number
-            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    console.log("OTP Sent!", confirmationResult);
-                    window.confirmationResult = confirmationResult; // Store to verify later
-                    resolve(confirmationResult);
-                })
-                .catch((error) => {
-                    console.error("Phone authentication error:", error);
-                    reject(error);
-                })
-                .finally(() => setLoading(false));
-        });
-    };
+    const logOut = () => {
+        return signOut(auth)
+    }
 
     // Handle user state
     useEffect(() => {
@@ -109,7 +78,7 @@ const AuthProvider = ({ children }: PropsType) => {
         loading,
         setLoading,
         googleLogin,
-        phoneLogin
+        logOut
     };
 
     return (

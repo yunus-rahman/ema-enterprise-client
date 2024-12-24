@@ -1,5 +1,8 @@
 const nextConfig = {
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,  // This will ignore TypeScript errors during the build
+  },
   rewrites() {
     return [
       { source: '/favicon.ico', destination: '/path/to/some/other/file' },

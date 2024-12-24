@@ -1,6 +1,6 @@
 import SocialLogin from "@/components/Shared/SocialLogin";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
 
 
 const Login = () => {
