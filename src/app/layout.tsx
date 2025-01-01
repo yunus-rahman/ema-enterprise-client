@@ -1,3 +1,4 @@
+'use client'
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -5,6 +6,7 @@ import Navbar from "@/components/Shared/Navbar";
 import Footer from "@/components/Shared/Footer";
 import Head from 'next/head';
 import AuthProvider from "@/provider/AuthProvider";
+import { usePathname } from "next/navigation";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,6 +29,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname()
+  console.log(pathname)
   return (
     <html lang="en">
       <Head>
@@ -39,6 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
+          {/* {pathname !== '/admin-dashboard' && <Navbar />} */}
           <Navbar />
           <div className="min-h-screen mt-10">
             {children}

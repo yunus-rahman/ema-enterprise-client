@@ -4,15 +4,19 @@
  * @see https://v0.dev/t/lJwnQlHSEBA
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
-// import logo from "../../../public/logo.jpg"
-import { useContext } from "react"
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { NavigationMenu, NavigationMenuList, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import Image from "next/image";
+import logo from "../../../public/logo.webp";
+import { usePathname } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AuthContext } from "@/provider/AuthProvider"
+import { useContext } from "react";
 // NavItems
-const NavItems = [
+const navItems = [
     {
         title: 'Home',
         path: '/',
@@ -25,98 +29,113 @@ const NavItems = [
         title: 'Contact',
         path: '/contact',
     },
+    {
+        title: 'Admin-dashboard',
+        path: '/admin-dashboard',
+    },
 ]
-export default function Component() {
-    const { user } = useContext(AuthContext)
+export default function Navbar() {
+    const pathname = usePathname();
+    const { user, logOut } = useContext(AuthContext)
     console.log(user)
     return (
-        <header className="flex h-20 w-full justify-between items-center px-4 md:px-6 border-b-2 shadow-lg bg-background text-[#DDB184]">
-            <Sheet>
-                <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="lg:hidden">
-                        <MenuIcon className="h-6 w-6" />
-                        <span className="sr-only">Toggle navigation menu</span>
-                    </Button>
-                </SheetTrigger>
-                <SheetContent side="left">
-                    <Link href="#" className="mr-6 hidden lg:flex" prefetch={false}>
-                        {/* <MountainIcon className="h-6 w-6" /> */}
-                        {/* <Image src={logo} alt='logo' height={50} width={50} /> */}
-                        <span className="sr-only">Acme Inc</span>
-                    </Link>
-                    <div className="grid gap-2 py-6">
-                        <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-                            Home
-                        </Link>
-                        <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-                            About
-                        </Link>
-                        <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-                            Services
-                        </Link>
-                        <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-                            Contact
-                        </Link>
-                    </div>
-                </SheetContent>
-            </Sheet>
-            {/* For lg device */}
-            <Link href="/" className="mr-6 hidden lg:flex items-center gap-2" prefetch={false}>
-                {/* <Image src={logo} alt='logo' height={50} width={50} className="rounded-full" /> */}
-                <span className="sr-only">Acme Inc</span>
-                <h2 className="text-lg font-semibold">Ema-Enterprise</h2>
+        <header className="flex h-20 w-full items-center px-4 md:px-6 shadow-2xl border-b-2 bg-teal-500">
+            {/* Mobile Menu Icon */}
+            <div className="lg:hidden mr-4">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline" size="icon">
+                            <MenuIcon />
+                            <span className="sr-only">Toggle navigation menu</span>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left">
+                        <div className="grid gap-2 py-6">
+                            {navItems.map((item, index) => {
+
+                                return (
+                                    <Link
+                                        key={index}
+                                        href={item.path}
+                                        className={`flex w-full items-center py-2 text-lg font-semibold text-white ${pathname === item.path ? 'underline shadow-2xl' : ''}`}
+                                        prefetch={false}
+                                    >
+                                        {item.title}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+
+            {/* Logo */}
+            <Link href="/" className="flex items-center" prefetch={false}>
+                <MountainIcon />
+                <span className="ml-2 text-lg text-white hidden lg:block">Ema-EnterPrise</span>
             </Link>
 
-            <nav className="hidden lg:flex justify-start gap-6">
+            {/* Desktop Navigation Menu */}
+            <div className="hidden lg:flex flex-grow justify-end mr-4">
+                <NavigationMenu>
+                    <NavigationMenuList className="flex space-x-3">
+                        {navItems.map((item, index) => {
 
-                {
-                    NavItems.map(item => <Link
-                        key={item.path}
-                        href={item.path}
-                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                        prefetch={false}
-                    >
-                        {item.title}
-                    </Link>)
-                }
-            </nav>
-            <nav >
+                            return (
+                                <NavigationMenuLink asChild key={index}>
+                                    <Link
+                                        href={item.path}
+                                        className={`group text-white font-bold text-base ${pathname === item.path ? 'underline shadow-2xl' : ''}`}
+                                        prefetch={false}
+                                    >
+                                        {item.title}
+                                    </Link>
+                                </NavigationMenuLink>
+                            );
+                        })}
+                    </NavigationMenuList>
+                </NavigationMenu>
+            </div>
 
-                {
-                    user?.email ? < Image
-                        className="rounded-full border border-primary"
-                        src={user?.photoURL || undefined} height={50} width={50} alt='' /> : <Link href='/login'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10 cursor-pointer">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
+            {/* Login/Register Buttons */}
+            {user ? (
+                <div className="ml-auto flex items-center">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Avatar>
+                                <AvatarImage src={user?.photoURL || undefined} alt="avatar" />
+                                <AvatarFallback />
+                            </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            {/* <DropdownMenuLabel>{user?.user_name}</DropdownMenuLabel> */}
+                            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                            <DropdownMenuLabel onClick={logOut}>LogOut</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            ) : (
+                <div className="ml-auto flex items-center">
+                    <Link className="mx-2 text-white" href="/register">Register</Link>
+                    <Link href="/login">
+                        <Button variant="default" className="rounded-full">Login</Button>
                     </Link>
-                }
-
-            </nav>
-
+                </div>
+            )}
         </header>
     )
 }
 
-function MenuIcon(props: object) {
+function MenuIcon() {
     return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
         </svg>
-    )
+    );
+}
+function MountainIcon() {
+    return <Image className="rounded-full" src={logo} alt="Logo" height={40} width={40} />;
 }
 
 
