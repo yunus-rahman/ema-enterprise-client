@@ -2,7 +2,7 @@
 
 const AdminDashboard = () => {
     return (
-        <div>
+        <div className="bg-red-500">
             Admin dashbaord
         </div>
     );

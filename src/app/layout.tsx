@@ -43,14 +43,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {/* {pathname !== '/admin-dashboard' && <Navbar />} */}
-          <Navbar />
-          <div className="min-h-screen mt-10">
-            {children}
-          </div>
-          <Footer />
-        </AuthProvider>
-      </body>
-    </html>
+          {!pathname.startsWith('/admin-dashboard') && <Navbar />}
+          <div className={`min-h-screen ${!pathname.startsWith('/admin-dashboard') &&'mt-10'}`}>
+          {children}
+        </div>
+        <Footer />
+      </AuthProvider>
+    </body>
+    </html >
   );
 }
