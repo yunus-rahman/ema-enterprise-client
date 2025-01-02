@@ -63,8 +63,8 @@ const AddProduct = () => {
         console.log(product)
         console.log(img_url)
         console.log(product)
-        const res = await addProduct.mutateAsync(product);
-        if (res.insertedId) {
+        const resProduct = await addProduct.mutateAsync(product);
+        if (resProduct.insertedId) {
             reset()
         }
     }
