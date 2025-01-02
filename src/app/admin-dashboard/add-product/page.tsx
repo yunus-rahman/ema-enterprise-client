@@ -11,9 +11,56 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea";
 import { useGetUnitName } from "../unit-name/api/route";
+import { useForm, SubmitHandler } from "react-hook-form"
+import { useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
+type Inputs = {
+    product_name: string;
+    product_image: File[]
+    ac_number: string;
+    quantity: string;
+    description: string;
+    price: number | string;
+    unit_name: string;
+}
 const AddProduct = () => {
     const { data: units = [], isLoading, isError, error } = useGetUnitName();
+    const [unit, setUnit] = useState('');
+
+    // React Hook Form
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Inputs>()
+    const onSubmit: SubmitHandler<Inputs> = async (product) => {
+        product.unit_name = unit;
+        product.price = parseFloat(product.price as string)
+        if (!unit) {
+            return toast.error('Please provide unit name')
+        }
+        //    get img
+        const img = { image: product.product_image[0] }
+        if (!product.product_image || product.product_image.length === 0) {
+            return toast.error('No image found please try again');
+        }
+        // post req to Image bb
+        const { data: res } = await axios.post(`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMG_API}`, img, {
+            headers: { "content-type": "multipart/form-data" },
+        });
+        // get url form image bb
+        const img_url = res.data.display_url;
+        if (!img_url) {
+            return toast.error('error form image server please try again or contact developer')
+        }
+        console.log(product)
+        console.log(img_url)
+        console.log(product)
+    }
+
+
     if (isLoading) {
         return <p>..</p>
     }
@@ -26,30 +73,37 @@ const AddProduct = () => {
             </div>
             {/* form */}
             <div className="mt-5">
-                <form className="space-y-3">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                     {/* row 1 */}
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="grid w-full items-center gap-1.5">
                             <Label htmlFor="product_name">Product Name</Label>
                             <Input
                                 className="bg-white"
-                                type="text" id="product_name" placeholder="Product name" />
+                                type="text" id="product_name" placeholder="Product name"
+                                required
+                                {...register('product_name')}
+                            />
                         </div>
                         <div className="grid w-full items-center gap-1.5">
                             <Label htmlFor="picture">Product Picture</Label>
-                            <Input className="bg-white" id="picture" type="file" />
+                            <Input className="bg-white" id="picture" type="file"
+                                required
+                                {...register('product_image')}
+                            />
                         </div>
                     </div>
                     {/* Row 2*/}
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid md:grid-cols-4 gap-4">
 
                         <div className="grid w-full  items-center gap-1.5">
                             <Label htmlFor="product_name">Unit Name</Label>
                             <Select
-                            // onValueChange={(value) => {
-                            //     setLesson(value); setValue("lesson_no", value, { shouldValidate: true });
-                            // }}
-                            // value={lesson}
+                                required
+                                onValueChange={(value) => {
+                                    setUnit(value)
+                                }}
+                                value={unit}
                             >
                                 <SelectTrigger
                                     className="w-full mx-auto bg-white">
@@ -75,26 +129,44 @@ const AddProduct = () => {
                             <Label htmlFor="ac_number">A/C Number</Label>
                             <Input
                                 className="bg-white"
-                                type="ac_number" id="ac_number" placeholder="Input your A/C number" />
+                                type="ac_number" id="ac_number" placeholder="Input your A/C number"
+                                required
+                                {...register('ac_number')}
+                            />
+                        </div>
+                        <div className="grid w-full  items-center gap-1.5">
+                            <Label htmlFor="quantity">Quantity</Label>
+                            <Input
+                                className="bg-white"
+                                type="quantity" id="quantity" placeholder="Input quantity"
+                                required
+                                {...register('quantity')}
+                            />
                         </div>
                         <div className="grid w-full  items-center gap-1.5">
                             <Label htmlFor="price">Price</Label>
                             <Input
                                 className="bg-white"
-                                type="price" id="price" placeholder="Input Price" />
+                                type="price" id="price" placeholder="Input Price"
+                                required
+                                {...register('price')}
+                            />
                         </div>
                     </div>
                     <div>
-                        <Textarea className="bg-white" placeholder="Type your message here." />
+                        <Textarea className="bg-white" placeholder="Type your message here."
+                            required
+                            {...register('description')}
+                        />
                     </div>
                     <div className="mt-5">
-                        <Button className="w-full hover:rounded-full duration-300 transition-border-radius hover:bg-teal-500 text-white">
+                        <Button className="w-full hover:rounded-full duration-300 transition-all hover:bg-teal-500 text-white">
                             Add Product
                         </Button>
                     </div>
                 </form>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 };
 
