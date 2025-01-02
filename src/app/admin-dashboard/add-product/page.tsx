@@ -15,6 +15,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useAddProduct } from "./api/route";
 
 type Inputs = {
     product_name: string;
@@ -27,16 +28,19 @@ type Inputs = {
 }
 const AddProduct = () => {
     const { data: units = [], isLoading, isError, error } = useGetUnitName();
+    const addProduct = useAddProduct()
     const [unit, setUnit] = useState('');
 
     // React Hook Form
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<Inputs>()
     const onSubmit: SubmitHandler<Inputs> = async (product) => {
         product.unit_name = unit;
+        product.CreateAt = new Date();
         product.price = parseFloat(product.price as string)
         if (!unit) {
             return toast.error('Please provide unit name')
@@ -55,9 +59,14 @@ const AddProduct = () => {
         if (!img_url) {
             return toast.error('error form image server please try again or contact developer')
         }
+        product.product_image = img_url;
         console.log(product)
         console.log(img_url)
         console.log(product)
+        const res = await addProduct.mutateAsync(product);
+        if (res.insertedId) {
+            reset()
+        }
     }
 
 
