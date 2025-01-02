@@ -1,3 +1,4 @@
+'use client'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,8 +10,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea";
+import { useGetUnitName } from "../unit-name/api/route";
 
 const AddProduct = () => {
+    const { data: units = [], isLoading, isError, error } = useGetUnitName();
+    if (isLoading) {
+        return <p>..</p>
+    }
     return (
         <section className="border-gray-400 border-2 bg-gray-200 text-gray-800 rounded-lg p-6 shadow-lg">
             {/* Heading */}
@@ -48,15 +54,20 @@ const AddProduct = () => {
                                 <SelectTrigger
                                     className="w-full mx-auto bg-white">
                                     <SelectValue
-                                        placeholder="Lesson No"
+                                        placeholder="Unit"
                                     />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {/* {
-                                        lessons.map((lesson) => <SelectItem
-                                            key={lesson.lesson_no}
-                                            value={lesson.lesson_no.toString()}>{`${lesson.lesson_no}-${lesson.lesson_name}`}</SelectItem>)
-                                    } */}
+                                    {
+                                        units?.map((unit) => <SelectItem
+                                            value={unit.unit_name}
+                                            key={unit._id}
+                                        >
+                                            {unit.unit_name}
+
+
+                                        </SelectItem>)
+                                    }
                                 </SelectContent>
                             </Select>
                         </div>

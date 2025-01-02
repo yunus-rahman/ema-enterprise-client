@@ -7,7 +7,15 @@ import Footer from "@/components/Shared/Footer";
 import Head from 'next/head';
 import AuthProvider from "@/provider/AuthProvider";
 import { usePathname } from "next/navigation";
-
+import { Toaster } from 'react-hot-toast';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+const queryClient = new QueryClient()
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -42,14 +50,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {!pathname.startsWith('/admin-dashboard') && <Navbar />}
-          <div className={`min-h-screen ${!pathname.startsWith('/admin-dashboard') &&'mt-10'}`}>
-          {children}
-        </div>
-        <Footer />
-      </AuthProvider>
-    </body>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            {!pathname.startsWith('/admin-dashboard') && <Navbar />}
+            <div className={`min-h-screen ${!pathname.startsWith('/admin-dashboard') && 'mt-10'}`}>
+              {children}
+            </div>
+            <Footer />
+          </AuthProvider>
+          <Toaster position="top-center" />
+        </QueryClientProvider>
+      </body>
     </html >
   );
 }
